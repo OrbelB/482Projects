@@ -12,8 +12,19 @@ public class Project2 {
 		int arr[] = { 2, 6, 8, 4, 11, 16, 0, 20, 1, 100, 5, 12, 99, 7, 13, 44, 46, 45};
 		int arr2[] = {0, 1, 2, 3, 4, 0, 1, 2, 3, 4 , 0, 1, 7, 8, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4};
 //		medianOfMed(arr, 0, arr.length, 0);
-		QuickSort(arr, 0, arr.length-1);
+		int arr3[] = { 2, 6, 8, 4, 11, 16, 0, 20, 1, 100, 5, 12, 99, 7, 13, 44, 46, 45};
+		Arrays.sort(arr);
+		System.out.println("The Target Value is: " + arr[5]);
+		QuickSortFindkth(arr, 5);
 		print(arr, 0 ,arr.length);
+	}
+	public static int QuickSortFindkth(int arr[], int target) {
+		QuickSort(arr, 0, arr.length-1);
+		int value = arr[target];
+		print(arr, 0, arr.length);
+		System.out.println("The Target is: " + target);
+		System.out.println("The Target Value is: " + value);
+		return value;
 	}
 	/*
 	 * A recursive function with 3 argumetns -> arr[], low, and high
