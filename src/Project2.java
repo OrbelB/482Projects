@@ -20,7 +20,7 @@ public class Project2 {
 	 */
 	public static void QuickSort(int arr[], int low, int high) {
 		if(low <= high) {
-			int pivot = partition(arr, low, high, arr[+]);
+			int pivot = partition(arr, low, high, arr[high]);
 			QuickSort(arr, low, pivot-1);
 			QuickSort(arr, pivot+1, high);
 		}
