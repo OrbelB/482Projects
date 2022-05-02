@@ -10,13 +10,18 @@ public class Project2 {
 		 * 		-> 5 is the size of the array getting put into the algorithm
 		 */
 		int arr[] = { 2, 6, 8, 4, 11, 16, 0, 20, 1, 100, 5, 12, 99, 7, 13, 44, 46, 45};
-		int arr2[] = {0, 1, 2, 3, 4, 0, 1, 2, 3, 4 , 0, 1, 7, 8, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4};
-//		medianOfMed(arr, 0, arr.length, 0);
-		int arr3[] = { 2, 6, 8, 4, 11, 16, 0, 20, 1, 100, 5, 12, 99, 7, 13, 44, 46, 45};
-		Arrays.sort(arr);
-		System.out.println("The Target Value is: " + arr[5]);
-		QuickSortFindkth(arr, 5);
+		int arr3[] = {2, 6, 8, 4, 11, 16, 0, 20, 1, 100, 5, 12, 99, 7, 13, 44, 46, 45};
+		int index = 17;
+		//Quick Sort Version
+		QuickSortFindkth(arr, index);
+		System.out.println("\n");
 		print(arr, 0 ,arr.length);
+		//Medians of Medians
+		int val = medianOfMed(arr3 ,0, arr3.length-1,index+1);
+		//int val = kthSmallest(arr3 ,0, arr3.length-1,index+1);
+		System.out.println("The Value is: " + val + "\nAt index: " + index);
+		
+
 	}
 	public static int QuickSortFindkth(int arr[], int target) {
 		QuickSort(arr, 0, arr.length-1);
@@ -55,6 +60,7 @@ public class Project2 {
 			if(target == arr[i]) {
 				//place target at the end of the array.
 				swap(arr, i, ceiling);
+				break;
 			}
 		}
 		//now we partition the array based on our pivot
@@ -74,73 +80,56 @@ public class Project2 {
 //	write your code to select 3th element as median if you have 5 elements, 2nd element as median if you have 4 elements 
 //	or 3 elements, 1st element as median if you have 2 elements or 1 element.
 //	Ms. Lord email
-	
 	public static int medianOfMed(int arr[], int start, int end, int k) {
-		if(end - start > 1 && k <= (end - start)-1){
-			//to get the number of values in the array
-		System.out.println(start);
-		System.out.println(end);
-		int arrSize = end - start;
-		//creating a separate array to hold the medians of arr. 
-		//median arr is given extra + 1 capacity for when there is a non 5 group of numbers. \int []medians
-		int []medians;
-		if(arr.length%5 != 0){
-			medians = new int[(1+end / 5)];
-		}
-		else{
-			medians = new int[(end / 5)];
-		}
-		
+		if(k > 0 && k <= (end - start)+1){
+		int arrSize = end - start + 1;
+		int []medians = new int[(4+arrSize) / 5];
 		int medIndex;
-		//filling the medians array with medians of arr
 		for(medIndex = 0; medIndex < arrSize/5; medIndex++) {
-			// System.out.println("The Start is: " + (start+medIndex*5) + " --> " + "Ending at " + (start+medIndex*5+5));
 			medians[medIndex] = getMed(arr, start+medIndex*5, start+medIndex*5+5);
 		}
-		//to get the median of the last remaining 1 - 4 elements.
 		if(medIndex*5 < arrSize) {
-			// System.out.println("The Starting index is: " + (start + medIndex)*5);
-			// System.out.println("arrSize is = " + arrSize); 
-			// System.out.println("arrSize%5 = " + (arrSize%5)); 
-			// System.out.println("The Ending index is: " + ((start + medIndex * 5 + arrSize%5)));		
-			medians[medIndex] = getMed(arr, (start + medIndex)*5,  (start + medIndex * 5 + arrSize%5));
+			medians[medIndex] = getMed(arr, start + medIndex*5,  (start + medIndex * 5 + arrSize%5));
 			medIndex++;
 		}
-
-		//finding the median of medians
-		//print(arr);
-		System.out.println("the Median arr is: ");
-//		print(medians);
 		int mm;
-		if(medians.length == 1){
+		if(medIndex == 1){
 			mm = medians[medIndex-1];
 		}
 		else{
-			mm = medianOfMed(medians, 0, medIndex, medIndex/2); 
+			mm = medianOfMed(medians, 0, medIndex-1, medIndex/2); 
 		}
-			int pivot = partition(medians, 0, medians.length, mm);
+			int pivot = partition(arr, start, end, mm);
+			if(k-1 == pivot - start){
+				return arr[pivot];
+			}
+			if(k-1 < pivot - start){
+				return medianOfMed(arr, start, pivot - 1, k);
+			}
+			else{
+				return medianOfMed(arr, pivot + 1, end, (k - pivot + start -1) );
+			}
 		}
-		return 0;
+		System.out.println("FAILED");
+		return Integer.MAX_VALUE;
 	}
+//	-----------------------------------------------------------------------------------------------
+	
+	
 	
 	public static int getMed(int arr[],int s,int f) {
-		Arrays.sort(arr, s, f);
-		//If s -> f have less than 5 variables getMid get the second element of a group of 4s 
-		// Or first element of a group of 2
-		if(arr.length - (s) == 2 || arr.length - (s) == 4) {
-			// System.out.println("Less than 5 values " + (arr.length - (s)));
-			return arr[(s+(f-s)/2)- 1];
-		}
-		else {
-			// System.out.println("The getMed is: "+ arr[s+(f-s)/2] + "\n");
-			return arr[s+(f-s)/2];	
-		}
+		 Arrays.sort(arr, s, f);
+	        return arr[s+(f-s)/2];    
 	}
 	
 	//A print method to help debug the algorithm
 	public static void print(int arr[], int i, int j) {
 		for (int a = i; a < j; a++) {
 			System.out.print(arr[a] + " ");
+		}
+		System.out.println();
+		for (int a = i; a < j; a++) {
+			System.out.print(a + " ");
 		}
 		System.out.println("\n");
 	}
